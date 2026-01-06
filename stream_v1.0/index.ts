@@ -9,9 +9,11 @@ const database = process.env.SF_DATABASE || "";
 
 const sqlText = process.env.SF_QUERY || "";
 
+const batchSize = Number(process.env.BATCH_SIZE) || 100;
+
 const snowflake = new Snowflake(account, username, password, database);
 const sqlserver = new SQLServer("", "", "", "");
-const batch = new Batch(100);
+const batch = new Batch(batchSize);
 
 try {
   await snowflake.connect();

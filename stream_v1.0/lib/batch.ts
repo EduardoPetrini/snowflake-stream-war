@@ -27,7 +27,7 @@ export class Batch {
       flush(this: Transform, callback: any) {
         log(`Flushing buffer, buffer size: ${buffer.length}`);
         if (buffer.length > 0) {
-          const pushed = this.push(buffer);
+          this.push(buffer);
           buffer = [];
         }
         callback();
