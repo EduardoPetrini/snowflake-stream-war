@@ -1,5 +1,6 @@
 import { Batch, Snowflake, SQLServer } from "./lib/index.ts";
 import { pipeline } from "node:stream/promises";
+import 'js-monitor-server';
 
 const account = process.env.SF_ACCOUNT || "";
 const username = process.env.SF_USERNAME || "";
