@@ -39,9 +39,17 @@ export class Snowflake {
 
     const stream: Readable = statement.streamRows();
     let count = 0;
+    let started = false;
     const readStream = new Readable({
       objectMode: true,
       read() {
+        if (started) {
+          return;
+        }
+
+        log("streaming started");
+        started = true;
+
         stream.on("data", (data) => {
           count++;
           if (count % 10000 === 0) {
