@@ -1,6 +1,7 @@
 import sql from "mssql";
 import { Writable } from "stream";
 import { setTimeout } from "timers/promises";
+import { log } from '../../utils/logger.ts';
 
 export class SQLServer {
   protected connection: sql.ConnectionPool;
@@ -24,7 +25,8 @@ export class SQLServer {
       objectMode: true,
       async write(chunk, encoding, callback) {
         await setTimeout(Math.random() * 100);
-        console.log(`Wrote ${++count} rows`);
+        count += chunk.length;
+        log(`Wrote ${count} rows`);
         callback();
       }
     });

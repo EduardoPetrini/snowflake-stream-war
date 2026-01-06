@@ -1,4 +1,5 @@
 import { Transform, } from "node:stream";
+import { log } from '../../utils/logger.ts';
 
 export class Batch {
   protected batchSize: number;
@@ -14,6 +15,7 @@ export class Batch {
       objectMode: true,
       transform(this: Transform, chunk: any, encoding) {
         buffer.push(chunk);
+        log(`Transforming chunk, buffer size: ${buffer.length}`);
         if (buffer.length >= batchSize) {
           this.push(buffer);
           buffer.length = 0;
@@ -21,6 +23,7 @@ export class Batch {
       },
 
       flush(this: Transform) {
+        log(`Flushing buffer, buffer size: ${buffer.length}`);
         if (buffer.length > 0) {
           this.push(buffer);
           buffer.length = 0;

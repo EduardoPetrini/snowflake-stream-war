@@ -1,5 +1,6 @@
 import snowflake from "snowflake-sdk";
 import { Readable } from "stream";
+import { log } from '../../utils/logger.ts';
 
 export class Snowflake {
   protected connection: snowflake.Connection;
@@ -37,8 +38,25 @@ export class Snowflake {
     }));
 
     const stream: Readable = statement.streamRows();
+    let count = 0;
+    const readStream = new Readable({
+      objectMode: true,
+      read() {
+        stream.on("data", (data) => {
+          count++;
+          if (count % 10000 === 0) {
+            log(`streaming... ${count}`);
+          }
+          this.push(data);
+        });
+        stream.on("end", () => {
+          log(`stream ended, total rows: ${count}`);
+          this.push(null);
+        });
+      }
+    });
 
-    return stream;
+    return readStream;
   }
 
   close() {
