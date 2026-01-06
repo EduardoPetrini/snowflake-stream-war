@@ -17,6 +17,11 @@ const readStream = await snowflake.getStream("SELECT * FROM table");
 const transformStream = batch.getTransformStream();
 const writeStream = sqlserver.getWriteStream();
 
-await pipeline(readStream, transformStream, writeStream);
 
-console.log("Done");
+try {
+  await pipeline(readStream, transformStream, writeStream);
+  console.log("Done");
+} catch (err) {
+  console.error("Pipeline failed:", err);
+  process.exit(1);
+}
