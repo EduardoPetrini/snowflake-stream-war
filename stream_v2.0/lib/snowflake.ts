@@ -24,7 +24,7 @@ export class Snowflake {
     }));
   }
 
-  async getStream(sqlText: string): Promise<Readable> {
+  async getStream(sqlText: string, hwm: number): Promise<Readable> {
     const statement: snowflake.RowStatement = await new Promise((resolve, reject) => this.connection.execute({
       sqlText,
       streamResult: true,
@@ -41,6 +41,7 @@ export class Snowflake {
     let count = 0;
     const readStream = new Readable({
       objectMode: true,
+      highWaterMark: hwm,
       read() {
         stream.resume();
       }

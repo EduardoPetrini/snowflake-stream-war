@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:v1": "node --env-file=.env --max-old-space-size=1024 stream_v1.0/index.ts",
+    "start:v2": "node --env-file=.env --max-old-space-size=1024 stream_v2.0/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
