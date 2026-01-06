@@ -11,6 +11,7 @@ export class Batch {
     const buffer: any[] = [];
     const batchSize = this.batchSize;
     return new Transform({
+      objectMode: true,
       transform(this: Transform, chunk: any, encoding) {
         buffer.push(chunk);
         if (buffer.length >= batchSize) {

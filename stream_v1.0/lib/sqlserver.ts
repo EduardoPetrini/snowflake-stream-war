@@ -21,6 +21,7 @@ export class SQLServer {
   getWriteStream() {
     let count = 0;
     return new Writable({
+      objectMode: true,
       async write(chunk, encoding, callback) {
         await setTimeout(Math.random() * 100);
         console.log(`Wrote ${++count} rows`);
