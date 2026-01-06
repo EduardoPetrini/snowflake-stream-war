@@ -24,9 +24,15 @@ export class SQLServer {
     return new Writable({
       objectMode: true,
       async write(chunk, encoding, callback) {
-        await setTimeout(Math.random() * 100);
+        if (!chunk?.length) {
+          // log('Not writing empty chunk');
+          callback();
+          return;
+        }
+        const wait = Math.round(Math.random() * 100);
+        await setTimeout(wait);
         count += chunk.length;
-        log(`Wrote ${count} rows`);
+        log(`Wrote ${count} rows, wait: ${wait}`);
         callback();
       }
     });

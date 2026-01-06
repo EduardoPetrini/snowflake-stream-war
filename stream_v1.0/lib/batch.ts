@@ -9,26 +9,31 @@ export class Batch {
   }
 
   getTransformStream() {
-    const buffer: any[] = [];
+    let buffer: any[] = [];
     const batchSize = this.batchSize;
-    return new Transform({
+
+    const t = new Transform({
       objectMode: true,
-      transform(this: Transform, chunk: any, encoding) {
+      transform(this: Transform, chunk: any, encoding: any, callback: any) {
         buffer.push(chunk);
-        log(`Transforming chunk, buffer size: ${buffer.length}`);
+        // log(`Transforming chunk, buffer size: ${buffer.length}`);
         if (buffer.length >= batchSize) {
-          this.push(buffer);
-          buffer.length = 0;
+          const pushed = this.push(buffer);
+          buffer = [];
         }
+        callback();
       },
 
-      flush(this: Transform) {
+      flush(this: Transform, callback: any) {
         log(`Flushing buffer, buffer size: ${buffer.length}`);
         if (buffer.length > 0) {
-          this.push(buffer);
-          buffer.length = 0;
+          const pushed = this.push(buffer);
+          buffer = [];
         }
+        callback();
       }
     });
+
+    return t;
   }
-} 
+}

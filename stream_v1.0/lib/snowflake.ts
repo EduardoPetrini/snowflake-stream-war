@@ -43,25 +43,32 @@ export class Snowflake {
     const readStream = new Readable({
       objectMode: true,
       read() {
-        if (started) {
-          return;
-        }
-
-        log("streaming started");
-        started = true;
-
-        stream.on("data", (data) => {
-          count++;
-          if (count % 10000 === 0) {
-            log(`streaming... ${count}`);
-          }
-          this.push(data);
-        });
-        stream.on("end", () => {
-          log(`stream ended, total rows: ${count}`);
-          this.push(null);
-        });
+        stream.resume();
       }
+    });
+
+    log("streaming started");
+    started = true;
+
+    stream.on("data", (data) => {
+      count++;
+      if (count % 10000 === 0) {
+        log(`streaming... ${count}`);
+      }
+      if (!readStream.push(data)) {
+        log(`pausing stream`);
+        stream.pause();
+      }
+    });
+
+    stream.on("end", () => {
+      log(`stream ended, total rows: ${count}`);
+      readStream.push(null);
+    });
+
+    stream.on("error", (err) => {
+      log(`stream error: ${err}`, err);
+      readStream.destroy(err);
     });
 
     return readStream;
