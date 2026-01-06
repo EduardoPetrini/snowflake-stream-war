@@ -12,14 +12,14 @@ const snowflake = new Snowflake(account, username, password, database);
 const sqlserver = new SQLServer("", "", "", "");
 const batch = new Batch(100);
 
-await snowflake.connect();
-// await sqlserver.connect();
-
-const readStream = await snowflake.getStream(sqlText);
-const transformStream = batch.getTransformStream();
-const writeStream = sqlserver.getWriteStream();
-
 try {
+  await snowflake.connect();
+  // await sqlserver.connect();
+
+  const readStream = await snowflake.getStream(sqlText);
+  const transformStream = batch.getTransformStream();
+  const writeStream = sqlserver.getWriteStream();
+
   await pipeline(readStream, transformStream, writeStream);
   console.log("Done");
 } catch (err) {
