@@ -1,4 +1,4 @@
-import { Batch, Snowflake, SQLServer } from "./lib";
+import { Batch, Snowflake, SQLServer } from "./lib/index.ts";
 import { pipeline } from "node:stream/promises";
 
 const account = process.env.SF_ACCOUNT || "";
