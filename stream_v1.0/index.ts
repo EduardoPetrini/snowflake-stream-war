@@ -6,6 +6,8 @@ const username = process.env.SF_USERNAME || "";
 const password = process.env.SF_PASSWORD || "";
 const database = process.env.SF_DATABASE || "";
 
+const sqlText = process.env.SF_QUERY || "";
+
 const snowflake = new Snowflake(account, username, password, database);
 const sqlserver = new SQLServer("", "", "", "");
 const batch = new Batch(100);
@@ -13,10 +15,9 @@ const batch = new Batch(100);
 await snowflake.connect();
 // await sqlserver.connect();
 
-const readStream = await snowflake.getStream("SELECT * FROM table");
+const readStream = await snowflake.getStream(sqlText);
 const transformStream = batch.getTransformStream();
 const writeStream = sqlserver.getWriteStream();
-
 
 try {
   await pipeline(readStream, transformStream, writeStream);
