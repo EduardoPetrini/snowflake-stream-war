@@ -23,7 +23,7 @@ try {
   await snowflake.connect();
   // await sqlserver.connect();
 
-  const readStream = await snowflake.getStream(sqlText, readHwm);
+  const readStream = snowflake.getStream(sqlText, batchSize, readHwm);
   const transformStream = batch.getTransformStream(transformHwm);
   const writeStream = sqlserver.getWriteStream(writeHwm);
 
